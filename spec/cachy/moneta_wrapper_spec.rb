@@ -56,4 +56,10 @@ describe "Cachy::MonetaWrapper" do
     @cache.should_receive(:delete).with('x_v1')
     Cachy.expire(:x)
   end
+
+  it "expires on timeout" do
+    Cachy.cache(:timeout_key, :expires_in => 2) { 'original' }
+    sleep 3
+    Cachy.cache(:timeout_key) { 'newkey' }.should_not == 'original'
+  end
 end
